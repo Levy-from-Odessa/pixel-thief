@@ -6,6 +6,8 @@ import { styled } from 'styled-components';
 import { convertCoordToPosition } from '../../utils/convertCoordToPosition';
 import { usePlayerControls } from '../../hooks/usePlayerControls';
 import { DirectionType } from '../../types';
+import { space } from '../../styles/space';
+import { Health } from '../Health';
 
 interface PropsType {
   actor: PlayerActorType
@@ -15,11 +17,17 @@ interface PropsType {
 const Layout = styled.div`
   position: absolute;
 `
+const HealthLayout = styled.div`
+  position: absolute;
+  top: -${space(30)};
+  left: -${space(2)};
+  display: flex;
+`
 
 
 export const Player = ({actor}: PropsType) => {
   const [state, send] = useActor(actor);
-  const {coords} = state.context;
+  const {coords, health} = state.context;
   const [x, y] = convertCoordToPosition(coords);
 
   usePlayerControls({
@@ -31,8 +39,14 @@ export const Player = ({actor}: PropsType) => {
   
 
   return (
-    <Layout style={{left: x, top: y}}>
-      <Image src={thiefGif} alt="thief" />
-    </Layout>
+    <>
+      <HealthLayout>
+        <Health health={health}/>
+      </HealthLayout>
+
+      <Layout style={{left: x, top: y}}>
+        <Image src={thiefGif} alt="thief" />
+      </Layout>
+    </>
   )
 }

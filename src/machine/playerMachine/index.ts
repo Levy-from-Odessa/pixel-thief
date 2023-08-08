@@ -1,17 +1,17 @@
 import { assign, createMachine } from "xstate";
 import { PlayerContextType, PlayerEventType, PlayerStateType, PlayerStates, PlayerEvents, ArrowButtonClickedType } from "./types";
-import { PLAYER_STARTING_COORD } from "../../constants";
+import { PLAYER_STARTING_COORD, PLAYER_STARTING_HEALTH } from "../../constants";
 import { choose, log, sendParent } from "xstate/lib/actions";
 import { getTargetCoords } from "../../utils/getTargetCoords";
 import { getIsOnGrid } from "../../utils/getIsOnGrid";
-import { GamePlayerEvents } from "../gameMachine/types";
+import { GameEvents, GamePlayerEvents } from "../gameMachine/types";
 
 
 export const playerMachine = createMachine<PlayerContextType, PlayerEventType, PlayerStateType>({
   id: "player",
   context: {
-    coords: PLAYER_STARTING_COORD
-
+    coords: PLAYER_STARTING_COORD,
+    health: PLAYER_STARTING_HEALTH
   },
   initial: PlayerStates.ALIVE,
   states: {
@@ -22,10 +22,27 @@ export const playerMachine = createMachine<PlayerContextType, PlayerEventType, P
         },
         [PlayerEvents.ON_RESET_PLAYER_COORDS]: {
           actions:  'resetPlayerCoords'
+        },
+        [GamePlayerEvents.PLAYER_ATTACKED]: {
+          actions:  'playerAttacked',
+          target: PlayerStates.DETERMINING
         }
       }
     },
-    [PlayerStates.DEAD]: {}
+    [PlayerStates.DETERMINING]: {
+      always: [
+        {
+          cond: 'isPlayerDead',
+          target: PlayerStates.DEAD
+        },
+        {
+          target: PlayerStates.ALIVE
+        }
+      ]
+    },
+    [PlayerStates.DEAD]: {
+      entry: ['broadcastPlayerDied']
+    }
   },
 },
 {
@@ -56,7 +73,11 @@ export const playerMachine = createMachine<PlayerContextType, PlayerEventType, P
         coords: targetCoords
       }
 
-    })
+    }),
+    playerAttacked: assign((context) => ({
+      health: context.health - 1
+    })),
+    broadcastPlayerDied: sendParent(GameEvents.PLAYER_DIED)
   },
   guards: {
     isSquareAvalible: (context: PlayerContextType, event: PlayerEventType): boolean => {
@@ -67,6 +88,7 @@ export const playerMachine = createMachine<PlayerContextType, PlayerEventType, P
       const targetCoords = getTargetCoords({coords, direction})
 
       return getIsOnGrid(targetCoords)
-    }
+    },
+    isPlayerDead: (context) => context.health === 0
   }
 })

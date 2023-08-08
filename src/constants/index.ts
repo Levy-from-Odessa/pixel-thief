@@ -11,7 +11,9 @@ export const PLAYER_STARTING_COORD: CoordType = [0, 1]
 
 export const NEXT_DOOR_COORDS: CoordType = [11, 1]
 // export const BACK_DOOR_COORDS = [0, 1]
+export const RESERVED_COORDS: CoordType[] = [NEXT_DOOR_COORDS, PLAYER_STARTING_COORD]
 
 export const TREASURE_COORDS = getRandomCoords()
 
-export const RESERVED_COORDS: CoordType[] = [NEXT_DOOR_COORDS, TREASURE_COORDS, PLAYER_STARTING_COORD]
+
+export const PLAYER_STARTING_HEALTH = 3

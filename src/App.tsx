@@ -1,6 +1,4 @@
-import React from 'react';
-import { MenuScreen } from './components/MenuScreen';
-import { Grid } from './components/Grid';
+import { Game } from './components/Game';
  
 
-export const App = () => <div className="">dd</div>
+export const App = () => <Game/>
