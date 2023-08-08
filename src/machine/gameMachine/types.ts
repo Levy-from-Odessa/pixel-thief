@@ -1,3 +1,4 @@
+import { CoordType } from "../../types";
 
 export enum GameStates {
   HOME = "HOME",
@@ -16,20 +17,24 @@ export enum GameEvents {
 
 // todo: research how to use enums in enums 
 // (${GameEvents.START}/LEVEL_1)
-export enum levelStates   {
+export enum LevelStates   {
   LEVEL_1 = `LEVEL_1`,
   LEVEL_2 = `LEVEL_2`,
   LEVEL_3 = `LEVEL_3`,
 }
 
-export enum levelEvents  {
+export enum LevelEvents  {
   GO_BACK = "GO_BACK",
   GO_FORWARD = "GO_FORWARD",
 }
 
- export type LevelStateValue = `${GameStates.PLAYING}.${levelStates.LEVEL_1}` 
-  | `${GameStates.PLAYING}.${levelStates.LEVEL_2}`
-  | `${GameStates.PLAYING}.${levelStates.LEVEL_3}`
+export enum GamePlayerEvents  {
+  PLAYER_MOVED = "PLAYER_MOVED",
+}
+
+ export type LevelStateValue = `${GameStates.PLAYING}.${LevelStates.LEVEL_1}` 
+  | `${GameStates.PLAYING}.${LevelStates.LEVEL_2}`
+  | `${GameStates.PLAYING}.${LevelStates.LEVEL_3}`
 
 export type GameStateValue =   GameStates.HOME | GameStates.PLAYING 
 | GameStates.GAME_OVER | GameStates.GAME_COMPLETE | LevelStateValue
@@ -39,10 +44,19 @@ export type GameStateType = {
   value: GameStateValue
 }
 
+
+export type PlayerMovementType = {
+  type: GamePlayerEvents.PLAYER_MOVED
+  coords: CoordType
+
+}
+
 export type GameEventType = {type: GameEvents.START} | 
 {type: GameEvents.PLAYER_DIED} | {type: GameEvents.PLAYER_GOT_TREASURE} | 
 {type: GameEvents.RESTART} | {type: GameEvents.TO_HOME} |
-{type: levelEvents.GO_BACK} | {type: levelEvents.GO_FORWARD}
+{type: LevelEvents.GO_BACK} | {type: LevelEvents.GO_FORWARD} |
+PlayerMovementType
+
 
 
 export const playerId = "playerId"

@@ -7,15 +7,20 @@ export enum PlayerStates {
 }
 
 
-export enum playerEvents  {
+export enum PlayerEvents  {
   ON_ARROW_BUTTON_CLICKED = "ON_ARROW_BUTTON_CLICKED",
+  ON_RESET_PLAYER_COORDS = "ON_RESET_PLAYER_COORDS"
 }
 export type ArrowButtonClickedType = {
-  type: playerEvents.ON_ARROW_BUTTON_CLICKED,
+  type: PlayerEvents.ON_ARROW_BUTTON_CLICKED,
   direction: DirectionType
 }
 
-export type PlayerEventType = ArrowButtonClickedType
+export type ResetPlayerCoordsType = {
+  type: PlayerEvents.ON_RESET_PLAYER_COORDS,
+}
+
+export type PlayerEventType = ArrowButtonClickedType | ResetPlayerCoordsType
 
 export interface PlayerContextType {
   coords: CoordType

@@ -1,6 +1,6 @@
 import { useMachine } from "@xstate/react";
 import { gameMachine } from "../../machine/gameMachine";
-import { GameEvents, GameStateValue, GameStates, levelEvents, playerId } from "../../machine/gameMachine/types";
+import { GameEvents, GameStateValue, GameStates, LevelEvents, playerId } from "../../machine/gameMachine/types";
 import { Menu } from "../Menu";
 
 import thiefGif from '../../assets/images/thief.gif'
@@ -50,8 +50,8 @@ export const Game = ({fastForwardState}: PropsType) => {
       <>
         <Levels
           isItLevel={(e) => state.matches(e)}
-          onGoBack={() => send(levelEvents.GO_BACK)}
-          onGoForward={() => send(levelEvents.GO_FORWARD)}
+          onGoBack={() => send(LevelEvents.GO_BACK)}
+          onGoForward={() => send(LevelEvents.GO_FORWARD)}
         />
         <Grid>
           {playerActor ? <Player actor={playerActor} /> : null}
